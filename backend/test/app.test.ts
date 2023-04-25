@@ -1,4 +1,4 @@
-import "chai/register-should.js";
+import "chai/register-should.js"; // Using Should style
 
 import { test, teardown } from "tap";
 import { faker } from "@faker-js/faker";
