@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { Match } from "./db/entities/Match.js";
 import { User } from "./db/entities/User.js";
 import { ICreateUsersBody } from "./types.js";
 
@@ -16,7 +17,7 @@ async function DoggrRoutes(app: FastifyInstance, _options = {}) {
   });
 
   // CRUD
-  // C
+  // Create
   app.post<{ Body: ICreateUsersBody }>("/users", async (req, reply) => {
     const { name, email, petType } = req.body;
 
@@ -37,10 +38,9 @@ async function DoggrRoutes(app: FastifyInstance, _options = {}) {
     }
   });
 
-  //R
+  //READ
   app.search("/users", async (req, reply) => {
     const { email } = req.body;
-    console.log(req.body);
 
     try {
       const theUser = await req.em.findOne(User, { email });
@@ -52,7 +52,7 @@ async function DoggrRoutes(app: FastifyInstance, _options = {}) {
     }
   });
 
-  // U
+  // UPDATE
   app.put<{ Body: ICreateUsersBody }>("/users", async (req, reply) => {
     const { name, email, petType } = req.body;
 
@@ -60,12 +60,13 @@ async function DoggrRoutes(app: FastifyInstance, _options = {}) {
     userToChange.name = name;
     userToChange.petType = petType;
 
+    // Reminder -- this is how we persist our JS object changes to the database itself
     await req.em.flush();
     console.log(userToChange);
     reply.send(userToChange);
   });
 
-  // D
+  // DELETE
   app.delete<{ Body: { email } }>("/users", async (req, reply) => {
     const { email } = req.body;
 
@@ -80,6 +81,37 @@ async function DoggrRoutes(app: FastifyInstance, _options = {}) {
       reply.status(500).send(err);
     }
   });
+
+  // CREATE MATCH ROUTE
+  app.post<{ Body: { email: string; matchee_email: string } }>(
+    "/match",
+    async (req, reply) => {
+      const { email, matchee_email } = req.body;
+      console.log(req.body);
+      console.log(email, matchee_email);
+
+      try {
+        // make sure that the matchee exists & get their user account
+        const matchee = await req.em.findOne(User, { email: matchee_email });
+        // do the same for the matcher/owner
+        const owner = await req.em.findOne(User, { email });
+
+        //create a new match between them
+        const newMatch = await req.em.create(Match, {
+          owner,
+          matchee,
+        });
+
+        //persist it to the database
+        await req.em.flush();
+        // send the match back to the user
+        return reply.send(newMatch);
+      } catch (err) {
+        console.error(err);
+        return reply.status(500).send(err);
+      }
+    }
+  );
 }
 
 export default DoggrRoutes;
