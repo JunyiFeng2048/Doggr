@@ -3,16 +3,16 @@ import { BaseEntity } from "./BaseEntity.js";
 
 @Entity({ tableName: "users" })
 export class User extends BaseEntity {
-  @Property()
-  @Unique()
-  email!: string;
+	@Property()
+	@Unique()
+	email!: string;
 
-  @Property()
-  name!: string;
+	@Property()
+	name!: string;
 
-  @Property()
-  petType!: string;
+	@Property()
+	petType!: string;
 
-  @Property()
-  isMatched: boolean = false;
+	@Property()
+	isMatched: boolean = false;
 }
