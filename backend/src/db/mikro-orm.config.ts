@@ -10,14 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const seedPath = path.join(__dirname, "seeders");
-const entitiesJSPath = path.join(
-  __dirname,
-  "..",
-  "..",
-  "build",
-  "db",
-  "entities"
-);
+const entitiesJSPath = path.join(__dirname, "..", "..", "build", "db", "entities");
 const entitiesTSPath = path.join(__dirname, "entities");
 const migrationsJSPath = path.join(
   __dirname,
@@ -30,6 +23,7 @@ const migrationsJSPath = path.join(
 const migrationsTSPath = path.join(__dirname, "migrations");
 
 export default defineConfig({
+
   entities: [entitiesJSPath],
   entitiesTs: [entitiesTSPath],
   tsNode: true,
@@ -73,4 +67,5 @@ export default defineConfig({
       return `Migration${timestamp}_${name}`;
     },
   },
+
 });

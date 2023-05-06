@@ -11,15 +11,16 @@ import { Match } from "./Match.js";
 
 @Entity({ tableName: "users" })
 export class User extends BaseEntity {
-  @Property()
-  @Unique()
-  email!: string;
+	@Property()
+	@Unique()
+	email!: string;
 
-  @Property()
-  name!: string;
+	@Property()
+	name!: string;
 
-  @Property()
-  petType!: string;
+	@Property()
+	petType!: string;
+
 
   // Note that these DO NOT EXIST in the database itself!
   @OneToMany(() => Match, (match) => match.owner, {
@@ -31,4 +32,5 @@ export class User extends BaseEntity {
     cascade: [Cascade.PERSIST, Cascade.REMOVE],
   })
   matched_by!: Collection<Match>;
+
 }
