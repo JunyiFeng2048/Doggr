@@ -5,4 +5,5 @@
 *.html
 *.json
 
-doc/
+**/doc
+**/public
