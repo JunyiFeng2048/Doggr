@@ -3,7 +3,9 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "@css/index.css";
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+const rootContainer: HTMLElement = document.getElementById("root") as HTMLElement;
+const root = ReactDOM.createRoot(rootContainer);
+root.render(
 	<React.StrictMode>
 		<App />
 	</React.StrictMode>
