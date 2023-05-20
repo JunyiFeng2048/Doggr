@@ -2,6 +2,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { SOFT_DELETABLE_FILTER } from "mikro-orm-soft-delete";
 import { User, UserRole } from "../db/entities/User.js";
 import { ICreateUsersBody, IUpdateUsersBody } from "../types.js";
+import bcrypt, { compare as bcryptCompare, hashSync } from "bcrypt";
 
 export function UserRoutesInit(app: FastifyInstance) {
 	// Route that returns all users, soft deleted and not
@@ -10,7 +11,7 @@ export function UserRoutesInit(app: FastifyInstance) {
 	});
 
 	// Route that returns all users who ARE NOT SOFT DELETED
-	app.get("/users", async (req, reply) => {
+	app.get("/users", { onRequest: [app.auth] }, async (req, reply) => {
 		try {
 			const theUser = await req.em.find(User, {});
 			reply.send(theUser);
@@ -19,16 +20,15 @@ export function UserRoutesInit(app: FastifyInstance) {
 		}
 	});
 
-	// User CRUD
-	// Refactor note - We DO use email still for creation!  We can't know the ID yet
 	app.post<{ Body: ICreateUsersBody }>("/users", async (req, reply) => {
 		const { name, email, password, petType } = req.body;
 
 		try {
+			const hashedPw = await bcrypt.hash(password, 10);
 			const newUser = await req.em.create(User, {
 				name,
 				email,
-				password,
+				password: hashedPw,
 				petType,
 				// We'll only create Admins manually!
 				role: UserRole.USER,
@@ -101,4 +101,30 @@ export function UserRoutesInit(app: FastifyInstance) {
 			}
 		}
 	);
+
+	app.post<{
+		Body: {
+			email: string;
+			password: string;
+		};
+	}>("/login", async (req, reply) => {
+		const { email, password } = req.body;
+
+		try {
+			const theUser = await req.em.findOneOrFail(User, { email }, { strict: true });
+
+			const hashCompare = await bcryptCompare(password, theUser.password);
+			if (hashCompare) {
+				const userId = theUser.id;
+				const token = app.jwt.sign({ userId });
+
+				reply.send({ token });
+			} else {
+				app.log.info(`Password validation failed -- ${password} vs ${theUser.password}`);
+				reply.status(401).send("Incorrect Password");
+			}
+		} catch (err) {
+			reply.status(500).send(err);
+		}
+	});
 }

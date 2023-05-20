@@ -20,8 +20,8 @@ function Match() {
 	};
 
 	let onPassButtonClick = () => {
-		let newCurrentProfile = getRandomProfile();
-		setCurrentProfile(newCurrentProfile);
+		let newProfile = getRandomProfile();
+		setCurrentProfile(newProfile);
 	};
 
 	let profile = (
