@@ -13,6 +13,7 @@ export class UserSeeder extends Seeder {
 			password: hashedPw,
 			petType: "Dog",
 			role: UserRole.ADMIN,
+			imgUri: "dog.jpg",
 		});
 
 		context.user2 = em.create(User, {
@@ -21,6 +22,7 @@ export class UserSeeder extends Seeder {
 			password: hashedPw,
 			petType: "Dog",
 			role: UserRole.USER,
+			imgUri: "dog.jpg",
 		});
 
 		context.user3 = em.create(User, {
@@ -29,6 +31,7 @@ export class UserSeeder extends Seeder {
 			password: hashedPw,
 			petType: "Dog",
 			role: UserRole.USER,
+			imgUri: "dog.jpg",
 		});
 
 		context.user4 = em.create(User, {
@@ -37,6 +40,7 @@ export class UserSeeder extends Seeder {
 			password: hashedPw,
 			petType: "Cat",
 			role: UserRole.USER,
+			imgUri: "dog.jpg",
 		});
 	}
 }

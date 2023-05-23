@@ -33,6 +33,9 @@ export class User extends DoggrBaseEntity {
 	@Enum(() => UserRole)
 	role!: UserRole; // string enum
 
+	@Property({ fieldName: "img_uri" })
+	imgUri!: string;
+
 	// Note that these DO NOT EXIST in the database itself!
 	@OneToMany(() => Match, (match) => match.owner, { cascade: [Cascade.PERSIST, Cascade.REMOVE] })
 	matches!: Collection<Match>;
