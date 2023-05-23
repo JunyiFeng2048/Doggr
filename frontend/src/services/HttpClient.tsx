@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ProfileType } from "../DoggrTypes";
 
 const serverIP = import.meta.env.VITE_API_HOST;
 const serverPort = import.meta.env.VITE_PORT;
@@ -12,3 +13,8 @@ export const httpClient = axios.create({
 		"Content-type": "application/json",
 	},
 });
+
+export async function getNextProfileFromServer() {
+	const profile = await httpClient.get<ProfileType>("/profile");
+	return profile.data;
+}

@@ -1,30 +1,45 @@
-import { useEffect, useState } from "react";
-import initialState, { getRandomProfile } from "../initialState";
-import { Profile } from "./Profile";
-import { Title } from "./Home";
+import { Profile } from "./Profile.tsx";
+import { ProfileType } from "@/DoggrTypes.ts";
+import { useAuth } from "../services/Auth.tsx";
+import { getNextProfileFromServer } from "../services/HttpClient.tsx";
+import { MatchService } from "../services/MatchService.tsx";
+import { PassService } from "../services/PassService.tsx";
+import { useContext, useEffect, useState } from "react";
 
-function Match() {
-	let [currentProfile, setCurrentProfile] = useState(initialState.currentProfile);
-	let [likeHistory, setLikeHistory] = useState(initialState.likeHistory);
+export const Match = () => {
+	const [currentProfile, setCurrentProfile] = useState<ProfileType>();
+
+	const auth = useAuth();
+
+	const fetchProfile = () => {
+		getNextProfileFromServer()
+			.then((response) => setCurrentProfile(response))
+			.catch((err) => console.log("Error in fetch profile", err));
+	};
 
 	useEffect(() => {
-		console.log("-- App rerenders --");
-	});
+		fetchProfile();
+	}, []);
 
-	let onLikeButtonClick = () => {
-		// this keeps allocations and copies to a minimum
-		let newLikeHistory = [...likeHistory, currentProfile];
-		let newProfile = getRandomProfile();
-		setCurrentProfile(newProfile);
-		setLikeHistory(newLikeHistory);
+	const onLikeButtonClick = () => {
+		MatchService.send(auth.userId, currentProfile.id)
+			.then(fetchProfile)
+			.catch((err) => {
+				console.error(err);
+				fetchProfile();
+			});
 	};
 
-	let onPassButtonClick = () => {
-		let newProfile = getRandomProfile();
-		setCurrentProfile(newProfile);
+	const onPassButtonClick = () => {
+		PassService.send(auth.userId, currentProfile.id)
+			.then(fetchProfile)
+			.catch((err) => {
+				console.error(err);
+				fetchProfile();
+			});
 	};
 
-	let profile = (
+	const profile = (
 		<Profile
 			{...currentProfile}
 			onLikeButtonClick={onLikeButtonClick}
@@ -34,9 +49,11 @@ function Match() {
 
 	return (
 		<>
-			<Title /> {profile}
+			<div>"MATCH PAGE"</div>
+			<p> User logged in as {auth.token}</p>
+			{profile}
 		</>
 	);
-}
+};
 
 export default Match;
