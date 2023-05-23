@@ -5,7 +5,6 @@ export const Home = () => {
 		<div>
 			<Title />
 			<Subtitle />
-			<UsersList />
 		</div>
 	);
 };
