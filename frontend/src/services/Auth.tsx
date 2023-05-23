@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }: any) => {
 			const thetoken = await getLoginTokenFromServer(email, password);
 			saveToken(thetoken);
 			await updateAxios(thetoken);
+			// Hooray we're logged in and our token is saved everywhere!
 			navigate(-1);
 			return true;
 		} catch (err) {
@@ -99,6 +100,7 @@ export async function getLoginTokenFromServer(email, password) {
 	console.log("In get login token from server with ", email, password);
 
 	const login_result = await httpClient.post("/login", { email, password });
+
 	return login_result.data.token;
 }
 
