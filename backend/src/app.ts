@@ -6,6 +6,7 @@ import DoggrRoutes from "./routes/routes.js";
 import config from "./db/mikro-orm.config.js";
 import cors from "@fastify/cors";
 import { AuthPlugin } from "./plugins/auth.js";
+import multipart from "@fastify/multipart";
 
 const envToLogger = {
 	development: {
@@ -43,6 +44,7 @@ await app.register(cors, {
 	},
 });
 
+await app.register(multipart);
 await app.register(FastifyMikroOrmPlugin, config);
 await app.register(FastifySearchHttpMethodPlugin, {});
 await app.register(FastifyBadWordsPlugin);
