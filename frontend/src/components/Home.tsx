@@ -1,19 +1,8 @@
-import UsersList from "./UserList";
-
-export const Home = () => {
+export default function Home() {
 	return (
 		<div>
-			<Title />
-			<Subtitle />
+			<h1>Doggr</h1>
+			<h3>Where your pets find love(tm)</h3>;
 		</div>
 	);
-};
-
-export function Title() {
-	return <h1>Doggr</h1>;
 }
-
-export function Subtitle() {
-	return <h3>Where your pets find love(tm)</h3>;
-}
-export default Home;

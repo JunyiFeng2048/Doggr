@@ -6,7 +6,7 @@
 	"main": "index.js",
 	"scripts": {
 		"dev": "nodemon --no-warnings=ExperimentalWarning src/index.ts",
-		"test": "cross-env NODE_ENV=test tap test/",
+		"test": "tap test/",
 		"fmt": "prettier --write .",
 		"lint": "eslint . --ext .ts",
 		"check": "pnpm fmt && pnpm lint",
@@ -68,6 +68,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.59.0",
 		"@typescript-eslint/parser": "^5.59.0",
 		"chai": "^4.3.7",
+		"cross-env": "^7.0.3",
 		"eslint": "^8.38.0",
 		"eslint-config-prettier": "^8.8.0",
 		"nodemon": "^2.0.22",

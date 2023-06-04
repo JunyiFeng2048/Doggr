@@ -3,7 +3,7 @@ import { AuthProvider } from "./services/Auth";
 import { DoggrRoutes } from "./DoggrRoutes";
 import "@css/DoggrStyles.css";
 
-function App() {
+export function App() {
 	return (
 		<BrowserRouter>
 			<AuthProvider>
@@ -14,5 +14,3 @@ function App() {
 		</BrowserRouter>
 	);
 }
-
-export default App;
