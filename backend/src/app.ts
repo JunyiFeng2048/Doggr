@@ -4,6 +4,9 @@ import { FastifySearchHttpMethodPlugin } from "./plugins/http_search.js";
 import { FastifyMikroOrmPlugin } from "./plugins/mikro.js";
 import DoggrRoutes from "./routes/routes.js";
 import config from "./db/mikro-orm.config.js";
+import cors from "@fastify/cors";
+import { AuthPlugin } from "./plugins/auth.js";
+import multipart from "@fastify/multipart";
 
 const envToLogger = {
 	development: {
@@ -35,10 +38,17 @@ const app = Fastify({
 	logger: envToLogger[process.env.NODE_ENV],
 });
 
+await app.register(cors, {
+	origin: (origin, cb) => {
+		cb(null, true);
+	},
+});
+
+await app.register(multipart);
 await app.register(FastifyMikroOrmPlugin, config);
 await app.register(FastifySearchHttpMethodPlugin, {});
 await app.register(FastifyBadWordsPlugin);
-
+await app.register(AuthPlugin);
 await app.register(DoggrRoutes, {});
 
 export default app;
