@@ -73,6 +73,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Install pino-pretty
+        run: pnpm add pino-pretty
+
+      - name: Run Drop Schema
+        run: pnpm schema:drop
+
       - name: Run Migrations
         run: pnpm migration:freshSeed
 
